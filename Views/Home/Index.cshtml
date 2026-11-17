@@ -1,0 +1,274 @@
+@model IReadOnlyList<EmotionMusicAnalyzer.Models.Track>
+@{
+    ViewData["Title"] = "Emotion Studio - Real-time Music Recommendation";
+}
+
+<div class="row justify-content-center mb-4">
+    <div class="col-lg-10 text-center">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-dark border border-secondary mb-3">
+            <span class="pulse-dot bg-success d-inline-block rounded-circle" style="width: 8px; height: 8px;"></span>
+            <span class="text-secondary small fw-medium">MediaPipe FaceLandmarker + HTML5 Audio Engine</span>
+        </div>
+        <h1 class="display-5 fw-bold mb-2">Analyze Your Expression, <span class="brand-logo-glow">Harmonize Your Mind</span></h1>
+        <p class="text-secondary lead fs-6 mx-auto" style="max-width: 680px;">
+            Experience genuine emotion-driven music therapy. Analyze your face via live webcam or photograph upload to receive scientifically aligned musical progressions.
+        </p>
+    </div>
+</div>
+
+<!-- Main Input Studio Card -->
+<div class="row justify-content-center mb-5">
+    <div class="col-lg-10">
+        <div class="card glass-panel border-0">
+            <div class="card-body p-4">
+                
+                <!-- Studio Navigation Tabs -->
+                <ul class="nav nav-pills nav-pills-custom justify-content-center mb-4" id="studio-tabs" role="tablist">
+                    <li class="nav-item me-2" role="presentation">
+                        <button class="nav-link active" id="tab-webcam-btn" type="button">
+                            <i class="bi bi-camera-video-fill me-2"></i> Live Webcam
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-upload-btn" type="button">
+                            <i class="bi bi-cloud-arrow-up-fill me-2"></i> Upload Photograph
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Guidance & Diagnostics Alert (Hidden by default) -->
+                <div id="guidance-alert" class="alert alert-warning border-0 bg-warning-subtle text-warning-emphasis d-flex align-items-start gap-3 p-3 rounded-3 d-none mb-4" role="alert">
+                    <i class="bi bi-info-circle-fill fs-5 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h6 class="alert-heading mb-1 fw-bold">Analysis Feedback & Quality Guidance</h6>
+                        <p id="guidance-text" class="mb-0 small">Guidance details will appear here.</p>
+                    </div>
+                </div>
+
+                <!-- Tab 1: Live Webcam View -->
+                <div id="view-webcam" class="tab-content-panel">
+                    <div class="camera-viewport mb-3">
+                        <div id="camera-live-badge" class="camera-live-badge d-none">
+                            <span class="pulse-dot"></span> LIVE FEED
+                        </div>
+                        <div id="camera-placeholder" class="text-center p-4">
+                            <div class="display-1 text-secondary opacity-50 mb-3">
+                                <i class="bi bi-camera-video"></i>
+                            </div>
+                            <h5 class="text-light fw-medium">Camera Is Idle</h5>
+                            <p class="text-secondary small mb-3">Enable your webcam to start real-time facial expression analysis.</p>
+                            <button id="btn-start-camera" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                                <i class="bi bi-play-fill me-1"></i> Start Webcam
+                            </button>
+                        </div>
+                        <video id="webcam-video" autoplay playsinline muted class="d-none"></video>
+                        <div class="camera-overlay-frame"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <button id="btn-capture-webcam" class="btn btn-primary px-4 py-2 rounded-pill shadow d-none">
+                            <i class="bi bi-magic me-2"></i> Analyze My Expression
+                        </button>
+                        <button id="btn-stop-camera" class="btn btn-outline-danger px-4 py-2 rounded-pill d-none">
+                            <i class="bi bi-stop-circle me-1"></i> Stop Camera
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Upload Photograph View -->
+                <div id="view-upload" class="tab-content-panel d-none">
+                    <div class="upload-viewport mb-3">
+                        <div id="upload-placeholder" class="w-100 h-100 d-flex flex-column justify-content-center p-4">
+                            <div id="drop-zone" class="drop-zone">
+                                <div class="display-3 text-secondary opacity-50 mb-2">
+                                    <i class="bi bi-cloud-upload"></i>
+                                </div>
+                                <h5 class="text-light fw-medium">Drag & Drop Your Photograph Here</h5>
+                                <p class="text-secondary small mb-3">Supports JPG, JPEG, or PNG portraits with clear facial details.</p>
+                                <button id="btn-select-file" class="btn btn-outline-info px-4 py-2 rounded-pill">
+                                    <i class="bi bi-folder2-open me-2"></i> Browse Computer
+                                </button>
+                                <input type="file" id="file-input" accept="image/jpeg,image/png,image/jpg" class="d-none">
+                            </div>
+                        </div>
+                        <div id="upload-preview-container" class="w-100 h-100 position-relative d-none">
+                            <img id="upload-preview-img" alt="Uploaded Portrait Preview" class="img-fluid" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3 mb-4">
+                        <button id="btn-analyze-upload" class="btn btn-primary px-4 py-2 rounded-pill shadow" disabled>
+                            <i class="bi bi-magic me-2"></i> Analyze Photo Expression
+                        </button>
+                        <button id="btn-clear-upload" class="btn btn-outline-secondary px-3 py-2 rounded-pill">
+                            <i class="bi bi-trash3 me-1"></i> Clear Photo
+                        </button>
+                    </div>
+
+                    <!-- Instant Sample Test Portraits -->
+                    <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="text-secondary small text-uppercase fw-bold mb-0">Or Quick-Test With Verified Sample Portraits:</h6>
+                            <span class="badge bg-secondary-subtle text-secondary small">Click to analyze instantly</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-4 col-sm-2">
+                                <div class="sample-card text-center p-1" data-sample-file="/samples/happy.jpg">
+                                    <img src="/samples/happy.jpg" class="rounded mb-1" alt="Happy Sample">
+                                    <div class="small fw-semibold text-warning">Happy</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-2">
+                                <div class="sample-card text-center p-1" data-sample-file="/samples/surprised.jpg">
+                                    <img src="/samples/surprised.jpg" class="rounded mb-1" alt="Surprised Sample">
+                                    <div class="small fw-semibold text-pink text-danger-emphasis">Surprised</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-2">
+                                <div class="sample-card text-center p-1" data-sample-file="/samples/neutral.jpg">
+                                    <img src="/samples/neutral.jpg" class="rounded mb-1" alt="Neutral Sample">
+                                    <div class="small fw-semibold text-info">Neutral</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-2">
+                                <div class="sample-card text-center p-1" data-sample-file="/samples/sad.jpg">
+                                    <img src="/samples/sad.jpg" class="rounded mb-1" alt="Sad Sample">
+                                    <div class="small fw-semibold text-primary">Sad</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-2">
+                                <div class="sample-card text-center p-1" data-sample-file="/samples/angry.jpg">
+                                    <img src="/samples/angry.jpg" class="rounded mb-1" alt="Angry Sample">
+                                    <div class="small fw-semibold text-success">Angry</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-2">
+                                <div class="sample-card text-center p-1" data-sample-file="/samples/fearful.jpg">
+                                    <img src="/samples/fearful.jpg" class="rounded mb-1" alt="Fearful Sample">
+                                    <div class="small fw-semibold text-cyan text-info-emphasis">Fearful</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results & Music Recommendations Container -->
+<div id="results-container" class="row justify-content-center d-none mb-5">
+    <div class="col-lg-10">
+        
+        <!-- Emotion Diagnosis Card -->
+        <div class="card glass-panel border-0 mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3 pb-3 border-bottom border-secondary border-opacity-25">
+                    <div class="d-flex align-items-center gap-3">
+                        <span id="emotion-badge" class="emotion-pill pill-neutral">Neutral</span>
+                        <span id="confidence-badge" class="badge bg-dark border border-secondary text-light">90% Confidence</span>
+                    </div>
+                    <div id="quality-badge" class="badge bg-dark border border-secondary text-light py-2 px-3 small">
+                        <i class="bi bi-shield-check text-success me-1"></i> Quality: Optimal
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-7 mb-3 mb-md-0">
+                        <h6 class="text-uppercase text-secondary small fw-bold mb-2">Facial Expression Interpretation</h6>
+                        <p id="emotion-description" class="text-light mb-3">Relaxed facial muscles, balanced lip line, and calm centered baseline state.</p>
+                        
+                        <h6 class="text-uppercase text-secondary small fw-bold mb-2">Therapeutic Musical Rationale</h6>
+                        <div class="p-3 rounded-3 bg-dark-subtle border border-secondary border-opacity-25">
+                            <p id="musical-rationale" class="text-info mb-0 small">Recommending chill, lo-fi, and balanced downtempo beats to sustain equilibrium.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <h6 class="text-uppercase text-secondary small fw-bold mb-2">Emotion Score Breakdown</h6>
+                        <div id="breakdown-container">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2 border-top border-secondary border-opacity-25">
+                    <span class="text-uppercase text-secondary small fw-bold d-block mb-1">Key Action Unit Signals:</span>
+                    <div id="signals-summary">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Music Recommendations Header & Filters -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div>
+                <h3 class="fw-bold mb-0 text-white">Recommended Tracks</h3>
+                <p class="text-secondary small mb-0">Harmonized specifically for your interpreted emotional state</p>
+            </div>
+            <div id="genre-pills-container" class="d-flex flex-wrap gap-1">
+                <!-- Genre pills populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Recommendations Grid -->
+        <div id="recommendations-grid" class="row">
+            <!-- Populated dynamically -->
+        </div>
+
+    </div>
+</div>
+
+<!-- Catalog Showcase Section (Visible initially) -->
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="fw-bold text-white mb-0">Music Catalog Library</h4>
+                <p class="text-secondary small mb-0">18 curated multi-track compositions categorized by affective state</p>
+            </div>
+            <span class="badge bg-dark border border-secondary text-info">100% Playable Offline</span>
+        </div>
+
+        <div class="row">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var track in Model.Take(6))
+                {
+                    <div class="col-md-4 col-sm-6 mb-3">
+                        <div class="track-card" data-track-id="@track.Id">
+                            <div class="track-artwork" style="background: @track.CoverGradient">
+                                <div class="track-play-overlay">
+                                    <button class="btn btn-circle btn-play-track" data-track-id="@track.Id" title="Play Track">
+                                        <i class="bi bi-play-fill"></i>
+                                    </button>
+                                </div>
+                                <span class="track-bpm-badge">@track.Bpm BPM</span>
+                            </div>
+                            <div class="track-info">
+                                <h6 class="track-title text-truncate" title="@track.Title">@track.Title</h6>
+                                <p class="track-artist text-truncate text-muted small mb-1">@track.Artist</p>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="track-genre-badge">@track.Genre</span>
+                                    <span class="track-duration text-muted small">0:@(track.DurationSeconds < 10 ? "0" : "")@track.DurationSeconds</span>
+                                </div>
+                                <p class="track-description text-muted small">@track.Description</p>
+                                <div class="track-tags">
+                                    @foreach (var tag in track.MoodTags.Take(3))
+                                    {
+                                        <span class="badge bg-dark-subtle text-light border border-secondary small me-1">@tag</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/js/app.js"></script>
+}

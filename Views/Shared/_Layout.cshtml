@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EmotionMusicAnalyzer</title>
+    <meta name="description" content="AI-Powered Emotion-Based Music Recommendation System utilizing MediaPipe Face Landmarker and HTML5 Audio" />
+    
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Custom Theme Stylesheet -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header>
+        <nav class="navbar navbar-expand-lg app-navbar py-3 sticky-top">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                    <span class="fs-4 text-primary"><i class="bi bi-music-note-beamed"></i></span>
+                    <span class="brand-logo-glow fs-4">EmotionMusicAnalyzer</span>
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active text-white fw-semibold" : "text-secondary")" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-camera me-1"></i> Studio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "About" ? "active text-white fw-semibold" : "text-secondary")" asp-controller="Home" asp-action="About">
+                                <i class="bi bi-info-circle me-1"></i> System Architecture
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <span class="badge bg-secondary-subtle text-light border border-secondary px-2 py-1 small">
+                                <i class="bi bi-cpu me-1 text-info"></i> MediaPipe AI + .NET 10
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main role="main" class="container py-4">
+        @RenderBody()
+    </main>
+
+    <!-- Global Toast / Error Alert -->
+    <div id="audio-error-toast" class="toast align-items-center text-bg-danger border-0 position-fixed top-0 end-0 m-3 d-none" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 3000;">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Audio track could not be loaded. Please ensure browser audio permissions are allowed.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- Processing Overlay (Visible during preprocessing & model inference) -->
+    <div id="processing-overlay" class="processing-overlay d-none">
+        <div class="spinner-border spinner-glow mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5 id="processing-message" class="text-light fw-medium">Analyzing facial features...</h5>
+        <p class="text-secondary small mb-0">Evaluating blendshapes & image quality metrics</p>
+    </div>
+
+    <!-- Sticky Bottom Audio Player Dock -->
+    <div id="player-dock" class="player-dock d-none">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+            <!-- Left: Current Track Meta -->
+            <div class="d-flex align-items-center gap-3">
+                <div id="player-cover" class="player-cover-box shadow-sm d-flex align-items-center justify-content-center text-white fs-5">
+                    <i class="bi bi-disc"></i>
+                </div>
+                <div class="player-track-meta text-truncate">
+                    <div id="player-title" class="fw-bold text-white text-truncate">Track Title</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span id="player-artist" class="text-secondary small text-truncate">Artist Name</span>
+                        <span class="badge bg-dark border border-secondary text-info small py-0 px-1" id="player-genre">Genre</span>
+                    </div>
+                </div>
+                <!-- Visualizer bars -->
+                <div id="player-visualizer" class="sound-bars ms-2 d-none d-md-inline-flex">
+                    <span class="sound-bar"></span>
+                    <span class="sound-bar"></span>
+                    <span class="sound-bar"></span>
+                    <span class="sound-bar"></span>
+                </div>
+            </div>
+
+            <!-- Center: Playback Controls & Scrubber -->
+            <div class="flex-grow-1 mx-2 mx-md-4" style="max-width: 520px;">
+                <div class="d-flex align-items-center justify-content-center gap-3 mb-1">
+                    <button id="btn-player-prev" class="btn btn-sm btn-link text-secondary p-0" title="Previous Track">
+                        <i class="bi bi-skip-start-fill fs-5"></i>
+                    </button>
+                    <button id="btn-player-play" class="btn btn-primary rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" title="Play/Pause">
+                        <i class="bi bi-play-fill fs-4"></i>
+                    </button>
+                    <button id="btn-player-next" class="btn btn-sm btn-link text-secondary p-0" title="Next Track">
+                        <i class="bi bi-skip-end-fill fs-5"></i>
+                    </button>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span id="player-current-time" class="small text-muted font-monospace" style="font-size: 0.75rem;">0:00</span>
+                    <div id="player-progress-container" class="player-progress-bar-container flex-grow-1">
+                        <div id="player-progress" class="player-progress-fill"></div>
+                    </div>
+                    <span id="player-total-time" class="small text-muted font-monospace" style="font-size: 0.75rem;">0:00</span>
+                </div>
+            </div>
+
+            <!-- Right: Volume Slider & Mute -->
+            <div class="d-none d-lg-flex align-items-center gap-2" style="width: 140px;">
+                <button id="btn-player-mute" class="btn btn-sm btn-link text-secondary p-0" title="Mute/Unmute">
+                    <i class="bi bi-volume-up-fill fs-5"></i>
+                </button>
+                <input id="player-volume" type="range" class="form-range" min="0" max="1" step="0.05" value="0.85" title="Volume">
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

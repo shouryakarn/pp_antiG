@@ -1,0 +1,157 @@
+@{
+    ViewData["Title"] = "System Architecture & Documentation";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        
+        <!-- Header -->
+        <div class="mb-4 text-center">
+            <h1 class="display-6 fw-bold text-white mb-2">EmotionMusicAnalyzer Architecture</h1>
+            <p class="text-secondary lead fs-6">A complete breakdown of facial analysis, emotion interpretation, and recommendation algorithms</p>
+        </div>
+
+        <!-- Technical Pipeline Overview -->
+        <div class="card glass-panel border-0 mb-4">
+            <div class="card-body p-4">
+                <h4 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-diagram-3-fill text-info"></i> End-to-End Processing Flow
+                </h4>
+                <div class="row g-3 text-center">
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-camera-fill text-primary fs-3 d-block mb-2"></i>
+                            <h6 class="text-white small fw-bold mb-1">1. Capture</h6>
+                            <p class="text-secondary small mb-0" style="font-size: 0.75rem;">Webcam stream or JPG/PNG photo</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-sliders text-warning fs-3 d-block mb-2"></i>
+                            <h6 class="text-white small fw-bold mb-1">2. Preprocess</h6>
+                            <p class="text-secondary small mb-0" style="font-size: 0.75rem;">Quality, brightness, blur & resize</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-cpu text-info fs-3 d-block mb-2"></i>
+                            <h6 class="text-white small fw-bold mb-1">3. MediaPipe</h6>
+                            <p class="text-secondary small mb-0" style="font-size: 0.75rem;">52 blendshapes & 478 3D landmarks</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-calculator text-success fs-3 d-block mb-2"></i>
+                            <h6 class="text-white small fw-bold mb-1">4. Classify</h6>
+                            <p class="text-secondary small mb-0" style="font-size: 0.75rem;">Genuine score & confidence</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-server text-danger fs-3 d-block mb-2"></i>
+                            <h6 class="text-white small fw-bold mb-1">5. ASP.NET</h6>
+                            <p class="text-secondary small mb-0" style="font-size: 0.75rem;">Recommendation engine & rationale</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-headphones text-purple fs-3 d-block mb-2"></i>
+                            <h6 class="text-white small fw-bold mb-1">6. Playback</h6>
+                            <p class="text-secondary small mb-0" style="font-size: 0.75rem;">HTML5 Audio singleton controller</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emotion-to-Music Mapping Matrix -->
+        <div class="card glass-panel border-0 mb-4">
+            <div class="card-body p-4">
+                <h4 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-table text-warning"></i> Emotion & Musical Mapping Matrix
+                </h4>
+                <div class="table-responsive">
+                    <table class="table table-dark table-borderless table-hover align-middle mb-0">
+                        <thead class="border-bottom border-secondary">
+                            <tr class="text-secondary small text-uppercase">
+                                <th>Emotion</th>
+                                <th>Facial Muscle Markers</th>
+                                <th>Target Musical Genres</th>
+                                <th>Musical Key & BPM</th>
+                                <th>Therapeutic Objective</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge pill-happy small">Happy</span></td>
+                                <td class="small text-secondary">Zygomatic smile lift, cheek elevation, relaxed brow</td>
+                                <td><span class="text-warning fw-semibold">Happy, Party, Energetic</span></td>
+                                <td class="small">120-128 BPM • C/G Major</td>
+                                <td class="small text-secondary">Synchronize with elevated mood; sustain celebratory momentum.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge pill-sad small">Sad</span></td>
+                                <td class="small text-secondary">Depressor anguli oris frown, inner brow raise arch</td>
+                                <td><span class="text-primary fw-semibold">Emotional, Acoustic, Sad</span></td>
+                                <td class="small">65-72 BPM • A/D Minor</td>
+                                <td class="small text-secondary">Validate emotional melancholy; provide gentle catharsis without rushing recovery.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge pill-angry small">Angry</span></td>
+                                <td class="small text-secondary">Corrugator brow furrow, compressed lips, focused stare</td>
+                                <td><span class="text-success fw-semibold">Calm, Relaxing, Instrumental</span></td>
+                                <td class="small">54-60 BPM • 432 Hz Drone</td>
+                                <td class="small text-secondary">De-escalate physiological tension; slow heart rate and restore peaceful clarity.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge pill-surprised small">Surprised</span></td>
+                                <td class="small text-secondary">Jaw drop opening, wide palpebral fissure, arched brow</td>
+                                <td><span class="text-danger-emphasis fw-semibold">Upbeat, Pop, Energetic</span></td>
+                                <td class="small">130-136 BPM • Electro Pop</td>
+                                <td class="small text-secondary">Harness sudden adrenaline surge; channel wonder into creative curiosity.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge pill-neutral small">Neutral</span></td>
+                                <td class="small text-secondary">Relaxed resting muscle tone, balanced lip line</td>
+                                <td><span class="text-info fw-semibold">Chill, Lo-fi, Balanced</span></td>
+                                <td class="small">75-82 BPM • Rhodes Jazz</td>
+                                <td class="small text-secondary">Maintain equilibrium, support mindfulness, and enhance productive focus.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge pill-fearful small">Fearful</span></td>
+                                <td class="small text-secondary">Palpebral wide eye opening, tense horizontal lip stretch</td>
+                                <td><span class="text-cyan fw-semibold">Gentle, Calm, Soothing</span></td>
+                                <td class="small">52-58 BPM • Music Box / Harp</td>
+                                <td class="small text-secondary">Provide reassurance and safety; ground apprehension with comforting warm harmonic blankets.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy & Browser-Side Processing Note -->
+        <div class="card glass-panel border-0 mb-4">
+            <div class="card-body p-4">
+                <h4 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-lock-fill text-success"></i> Privacy & Performance Principles
+                </h4>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <h6 class="text-white fw-bold">1. Zero Facial Image Server Storage</h6>
+                        <p class="text-secondary small mb-0">
+                            Facial analysis is performed directly in your local browser using WebAssembly and WebGL shaders via MediaPipe FaceLandmarker. Your camera video and personal facial photographs never leave your browser or get stored on any remote server.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-white fw-bold">2. Clean Aesthetic Guarantee</h6>
+                        <p class="text-secondary small mb-0">
+                            Per design requirements, facial landmark dots, connected meshes, and wireframes are intentionally excluded from the user interface, ensuring a clean, distraction-free aesthetic focused entirely on the musical experience.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

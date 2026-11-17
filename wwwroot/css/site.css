@@ -1,0 +1,486 @@
+/* -------------------------------------------------------------
+   EmotionMusicAnalyzer - Modern Sleek Dark Design System
+   ------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+    --bg-main: #0B0F19;
+    --bg-surface: #111827;
+    --bg-card: rgba(26, 34, 53, 0.75);
+    --border-card: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(139, 92, 246, 0.3);
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --accent-primary: #8B5CF6;
+    --accent-hover: #7C3AED;
+    --color-happy: #F59E0B;
+    --color-sad: #6366F1;
+    --color-angry: #10B981; /* Calming restorative tone */
+    --color-surprised: #EC4899;
+    --color-neutral: #8B5CF6;
+    --color-fearful: #06B6D4;
+}
+
+body {
+    background-color: var(--bg-main);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.10) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    padding-bottom: 90px; /* Space for sticky audio player dock */
+}
+
+h1, h2, h3, h4, h5, h6, .brand-font {
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+/* Navbar */
+.app-navbar {
+    background: rgba(15, 23, 42, 0.85) !important;
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-card);
+}
+
+.brand-logo-glow {
+    background: linear-gradient(135deg, #A78BFA 0%, #38BDF8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+/* Glassmorphic Cards */
+.glass-panel {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-card);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.35);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-panel:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* Input Studio Tabs */
+.nav-pills-custom .nav-link {
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-card);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-pills-custom .nav-link.active {
+    color: #FFF;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, #6366F1 100%);
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+}
+
+/* Viewport Containers */
+.camera-viewport, .upload-viewport {
+    position: relative;
+    width: 100%;
+    min-height: 380px;
+    max-height: 480px;
+    background: #060911;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.camera-viewport video, .upload-viewport img {
+    width: 100%;
+    height: 100%;
+    max-height: 480px;
+    object-fit: contain;
+}
+
+.camera-overlay-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.camera-live-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(220, 38, 38, 0.85);
+    backdrop-filter: blur(8px);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 10;
+}
+
+.camera-live-badge .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #FFF;
+    border-radius: 50%;
+    animation: livePulse 1.2s infinite;
+}
+
+@keyframes livePulse {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Upload Dropzone */
+.drop-zone {
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.drop-zone.drag-over {
+    border-color: var(--accent-primary);
+    background: rgba(139, 92, 246, 0.08);
+}
+
+/* Sample Quick-Select Cards */
+.sample-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.sample-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-primary);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.sample-card img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+/* Emotion Badges & Pills */
+.emotion-pill {
+    font-size: 1.15rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+}
+
+.pill-happy {
+    background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+    color: #FFF;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+}
+
+.pill-sad {
+    background: linear-gradient(135deg, #6366F1 0%, #3B82F6 100%);
+    color: #FFF;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+}
+
+.pill-angry {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFF;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+}
+
+.pill-surprised {
+    background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%);
+    color: #FFF;
+    box-shadow: 0 4px 16px rgba(236, 72, 153, 0.4);
+}
+
+.pill-neutral {
+    background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%);
+    color: #FFF;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+}
+
+.pill-fearful {
+    background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
+    color: #FFF;
+    box-shadow: 0 4px 16px rgba(6, 182, 212, 0.4);
+}
+
+/* Emotion breakdown bars */
+.bg-happy { background: var(--color-happy) !important; }
+.bg-sad { background: var(--color-sad) !important; }
+.bg-angry { background: var(--color-angry) !important; }
+.bg-surprised { background: var(--color-surprised) !important; }
+.bg-neutral { background: var(--color-neutral) !important; }
+.bg-fearful { background: var(--color-fearful) !important; }
+
+/* Signal tags */
+.signal-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.signal-tag strong {
+    color: #FFF;
+}
+
+/* Track Cards */
+.track-card {
+    background: rgba(22, 30, 49, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.track-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.5);
+}
+
+.track-card.is-playing {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+}
+
+.track-artwork {
+    height: 130px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.track-play-overlay {
+    opacity: 0.9;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.track-card:hover .track-play-overlay {
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+.btn-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.85);
+    color: #FFF;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+}
+
+.btn-circle:hover {
+    background: #FFF;
+    color: #0F172A;
+    border-color: #FFF;
+    transform: scale(1.05);
+}
+
+.track-bpm-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 6px;
+    color: #E2E8F0;
+}
+
+.track-info {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.track-title {
+    font-weight: 600;
+    color: #FFF;
+    margin-bottom: 2px;
+}
+
+.track-genre-badge {
+    background: rgba(139, 92, 246, 0.15);
+    color: #C4B5FD;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+.track-description {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    flex-grow: 1;
+    margin-bottom: 8px;
+}
+
+/* Sticky Bottom Audio Player Dock */
+.player-dock {
+    position: fixed;
+    bottom: 12px;
+    left: 16px;
+    right: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 10px 18px;
+    z-index: 1050;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.player-cover-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.player-progress-bar-container {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    transition: height 0.15s ease;
+}
+
+.player-progress-bar-container:hover {
+    height: 8px;
+}
+
+.player-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-primary) 0%, #38BDF8 100%);
+    border-radius: 3px;
+    width: 0%;
+    pointer-events: none;
+}
+
+/* Animated Sound Wave Visualizer */
+.sound-bars {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 18px;
+}
+
+.sound-bar {
+    width: 3px;
+    background: var(--accent-primary);
+    border-radius: 2px;
+    height: 4px;
+    transition: height 0.2s ease;
+}
+
+.sound-bars.playing .sound-bar:nth-child(1) { animation: soundWave 0.8s infinite 0.1s; }
+.sound-bars.playing .sound-bar:nth-child(2) { animation: soundWave 0.9s infinite 0.3s; }
+.sound-bars.playing .sound-bar:nth-child(3) { animation: soundWave 0.7s infinite 0.2s; }
+.sound-bars.playing .sound-bar:nth-child(4) { animation: soundWave 1.0s infinite 0.4s; }
+
+@keyframes soundWave {
+    0%, 100% { height: 4px; }
+    50% { height: 16px; }
+}
+
+/* Processing Overlay */
+.processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(11, 15, 25, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.spinner-glow {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.25rem;
+    color: var(--accent-primary);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .player-dock {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        padding: 8px 12px;
+    }
+    .player-dock .player-track-meta {
+        max-width: 130px;
+    }
+}
